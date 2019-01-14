@@ -1,9 +1,8 @@
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipe.model';
-import swal from 'sweetalert';
 import { Shared } from 'src/app/shared/sharedcode.module';
 
 @Component({
@@ -18,7 +17,7 @@ export class RecipeEditComponent implements OnInit {
   recipeForm: FormGroup;
   shared: Shared = new Shared();
 
-  constructor(private route: ActivatedRoute, private recipeService: RecipeService) { }
+  constructor(private route: ActivatedRoute, private recipeService: RecipeService, private router: Router) { }
 
   ngOnInit() {
     this.route.params
@@ -40,6 +39,8 @@ export class RecipeEditComponent implements OnInit {
       this.recipeService.addRecipe(newRecipe);
       this.shared.alert("Success", "Recipe Added","success");
     }
+
+    this.onCancel();
   }
 
   onAddIngredient() {
@@ -49,6 +50,10 @@ export class RecipeEditComponent implements OnInit {
         "amount": new FormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
       })
     );
+  }
+
+  onDeleteIngredient(index: number) {
+    (<FormArray>this.recipeForm.get("ingredients")).removeAt(index);
   }
 
   private initForm() {
@@ -81,6 +86,10 @@ export class RecipeEditComponent implements OnInit {
       "description": new FormControl(recipeDescription, Validators.required),
       "ingredients": recipeIngredients
     });
+  }
+
+  onCancel() {
+    this.router.navigate(["../"], {relativeTo: this.route});
   }
 
   getControls() {
