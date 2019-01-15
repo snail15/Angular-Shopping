@@ -1,4 +1,7 @@
+import { Shared } from 'src/app/shared/sharedcode.module';
+import { DataStorageService } from './../shared/data-storage.service';
 import { Component, OnInit} from '@angular/core';
+import { Recipe } from '../recipes/recipe.model';
 
 @Component({
   selector: 'app-header',
@@ -6,10 +9,24 @@ import { Component, OnInit} from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  private shared: Shared = new Shared();
 
-  constructor() { }
+  constructor(private dataStorageService: DataStorageService) { }
 
   ngOnInit() {
+  }
+
+  onSaveData() {
+    this.dataStorageService.storeRecipes().subscribe(
+      (response: Recipe[]) => {
+        this.shared.alert("Success", "Recipe Saved To DB", "success");
+      }
+    );
+  }
+
+  onFetchData() {
+    this.dataStorageService.getRecipes(); //subscribe in service
+    this.shared.alert("Success", "Recipe Fetched From DB", "success");
   }
 
 
