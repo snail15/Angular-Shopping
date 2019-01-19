@@ -1,3 +1,4 @@
+import { AuthService } from './../auth/auth.servoce';
 import { Shared } from 'src/app/shared/sharedcode.module';
 import { DataStorageService } from './../shared/data-storage.service';
 import { Component, OnInit} from '@angular/core';
@@ -11,7 +12,7 @@ import { Recipe } from '../recipes/recipe.model';
 export class HeaderComponent implements OnInit {
   private shared: Shared = new Shared();
 
-  constructor(private dataStorageService: DataStorageService) { }
+  constructor(private dataStorageService: DataStorageService, private authService: AuthService) { }
 
   ngOnInit() {
   }
@@ -27,6 +28,10 @@ export class HeaderComponent implements OnInit {
   onFetchData() {
     this.dataStorageService.getRecipes(); //subscribe in service
     this.shared.alert("Success", "Recipe Fetched From DB", "success");
+  }
+
+  onLogout() {
+    this.authService.logout();
   }
 
 
